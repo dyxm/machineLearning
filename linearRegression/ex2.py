@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 # 线性回归分析例子--多元线性回归
+# 作者：dyxm
 
 # 基础库-矩阵运算
 import numpy as np
@@ -47,38 +48,51 @@ df = pd.read_csv(PATH + 'income.data', names=['year', 'GDP', 'savings', 'revenue
 # plt.show()
 
 # 读取数据--矩阵形式
-x = np.array(df.ix[:, 2:6]).tolist()
+x = np.array(df.ix[:, 2: 6]).tolist()
 [i.insert(0, 1) for i in x]
 
 X = np.array(x)
-Y = np.array(df['GDP'].tolist())
+Y = np.array(df.ix[:, 1: 2])
+# print
+# 归一化
+def normalize(X):
+    mean = np.mean(X, 0)
+    std = np.std(X, 0)
+    for i in range(1, X.shape[1]):
+        X[:, i] = (X[:, i] - mean[i]) / std[i]
+    return X
 
-# print X.T
 # 代价函数
 def Cost(X, Y, theta):
     # J = (np.sum((X.dot(theta) - Y)**2))
     C = X.dot(theta) - Y
     J = (C.T.dot(C))
-    return J
+    return J[0]
 
 
 # 梯度下降
 def gradientDescent(X, Y, theta, rate, iterators):
     cost = []
+    len = np.shape(X)[0]
     for i in range(iterators):
-        theta = theta - rate * (X.T.dot(X.dot(theta) - Y))
+        theta = theta - (rate / len) * (X.T.dot(X.dot(theta) - Y))
         c = Cost(X, Y, theta)
-        cost.append(c)
-        print c
+        cost.append(c[0])
+        # print c
 
     return theta, cost
 
-theta = [0, 0, 0, 0, 0]
-rate = 0.0000000000000006
+theta = [[0], [0], [0], [0], [0]]
+rate = 0.0006
 iterators = 10000
 cost = []
+# 归一化
+X = normalize(X)
+Y = normalize(Y)
+
 theta, cost = gradientDescent(X, Y, theta, rate, iterators)
 print theta
+print cost
 
 fig, ax = plt.subplots(2, 2, figsize=(12, 12))
 ax[0][0].scatter(df['year'], df['savings'])
@@ -95,16 +109,20 @@ ax[0][1].set_xlabel('iterators')
 ax[0][1].set_ylabel('Loss')
 ax[0][1].set_title('Loss Function')
 
-ax[1][0].scatter(df['year'], df['GDP'])
-ax[1][0].plot(df['year'], theta[0] + theta[1] * df['savings'] + theta[2] * df['revenue'] + theta[3] * df['CPI'] + theta[4] * df['totalTrade'], color='green')
+ax[1][0].scatter(df['year'], Y)
+ax[1][0].plot(df['year'], theta[0] + theta[1] * X[:, 1:2] + theta[2] * X[:, 2:3] + theta[3] * X[:, 3:4] + theta[4] * X[:, 4:5], color='green')
 ax[1][0].set_xlabel('Year')
 ax[1][0].set_ylabel('GDP')
 ax[1][0].set_title('GDP And Year Scatter')
 
-# ax[1][1].scatter(df['year'], df['GDP'])
-# ax[1][1].plot(df['year'], -8218.578 + 0.338696 * df['savings'] + 2.644429 * df['revenue'] + 95.12859 * df['CPI'] + 0.176135 * df['totalTrade'], color='green')
-# ax[1][1].set_xlabel('Year')
-# ax[1][1].set_ylabel('GDP')
-# ax[1][1].set_title('GDP And Year Scatter')
+# 调用Statsmodels库进行专业的分析
+import statsmodels.api as sm
+results = sm.OLS(Y, X).fit()
+params = results.params
+ax[1][1].scatter(df['year'], Y)
+ax[1][1].plot(df['year'], params[0] + params[1] * X[:, 1:2] + params[2] * X[:, 2:3] + params[3] * X[:, 3:4] + params[4] * X[:, 4:5], color='green')
+ax[1][1].set_xlabel('Year')
+ax[1][1].set_ylabel('GDP')
+ax[1][1].set_title('GDP And Year Scatter')
 
 plt.show()

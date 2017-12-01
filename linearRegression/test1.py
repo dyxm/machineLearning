@@ -81,9 +81,9 @@ import numpy as np
 # seaborn库
 import seaborn as sns
 
-# 总览
-print sns.pairplot(df, hue='class')
-sns.plt.show()
+# 各属性相关性总览
+# print sns.pairplot(df, hue='class')
+# sns.plt.show()
 
 # 小提琴图
 # fig, ax = plt.subplots(2, 2, figsize=(7,7))
@@ -97,3 +97,21 @@ sns.plt.show()
 #     plt.setp(i.get_xticklabels(), rotation=-90)
 # fig.tight_layout()
 # sns.plt.show()
+
+
+# Statsmodels库
+import statsmodels.api as sm
+
+y = df['plength']
+x = df['pwidth']
+X = sm.add_constant(x)
+results = sm.OLS(y, X).fit()
+print (results.summary())
+# 画图
+fig, ax = plt.subplots(figsize=(6,6))
+ax.plot(x, results.fittedvalues, label='regression line')
+ax.scatter(df['pwidth'], df['plength'], color='green')
+ax.set_xlabel('pwidth')
+ax.set_ylabel('plength')
+ax.set_title('Petal Scatterplot')
+plt.show()
