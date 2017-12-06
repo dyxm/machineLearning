@@ -1,6 +1,6 @@
 # coding=utf-8
 # 决策树原始代码实现
-# 作者：dyxm
+# 作者：来源网络
 
 import operator
 from math import log

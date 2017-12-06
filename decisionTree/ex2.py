@@ -1,6 +1,6 @@
 # coding=utf-8
 # 决策树--调用sklearn的相关库
-# 作者：dyxm
+# 作者：dyxm & 老王
 
 from sklearn.feature_extraction import DictVectorizer
 import csv
