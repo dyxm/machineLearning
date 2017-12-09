@@ -6,6 +6,7 @@ import operator
 from math import log
 import time
 
+
 # 创建训练数据集
 def createDataSet():
     dataSet = [[1, 1, 'yes'],
