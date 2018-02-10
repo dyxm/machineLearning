@@ -12,7 +12,6 @@ from sklearn.grid_search import GridSearchCV
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.svm import SVC
 
-
 # ###################################### 初始化数据 ############################################
 # 加载人脸库
 lfw_people = fetch_lfw_people(min_faces_per_person=70, resize=0.4)
@@ -75,6 +74,8 @@ y_pred = clf.predict(X_test_pca)
 print "done in %0.3fs" % (time() - t0)
 print classification_report(y_test, y_pred, target_names=target_names)
 print confusion_matrix(y_test, y_pred, labels=range(n_classes))
+
+
 # #########################################################################################
 
 
@@ -90,12 +91,12 @@ def plot_gallery(images, titles, h, w, n_row=3, n_col=4):
         pl.xticks(())
         pl.yticks(())
 
+
 # 设置标题
 def title(y_pred, y_test, target_names, i):
     pred_name = target_names[y_pred[i]].rsplit(' ', 1)[-1]
     true_name = target_names[y_test[i]].rsplit(' ', 1)[-1]
     return 'predicted: %s\ntrue:      %s' % (pred_name, true_name)
-
 
 
 prediction_titles = [title(y_pred, y_test, target_names, i) for i in range(y_pred.shape[0])]

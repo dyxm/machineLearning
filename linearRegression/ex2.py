@@ -8,11 +8,10 @@ import numpy as np
 import pandas as pd
 # 绘图库
 import matplotlib.pyplot as plt
+
 plt.style.use('ggplot')
 # 可视化库
 import seaborn as sns
-
-
 
 PATH = r'../dataSet/'
 df = pd.read_csv(PATH + 'income.data', names=['year', 'GDP', 'savings', 'revenue', 'CPI', 'totalTrade'])
@@ -53,6 +52,8 @@ x = np.array(df.ix[:, 2: 6]).tolist()
 
 X = np.array(x)
 Y = np.array(df.ix[:, 1: 2])
+
+
 # print
 # 归一化
 def normalize(X):
@@ -61,6 +62,7 @@ def normalize(X):
     for i in range(1, X.shape[1]):
         X[:, i] = (X[:, i] - mean[i]) / std[i]
     return X
+
 
 # 代价函数
 def Cost(X, Y, theta):
@@ -81,6 +83,7 @@ def gradientDescent(X, Y, theta, rate, iterators):
         # print c
 
     return theta, cost
+
 
 theta = [[0], [0], [0], [0], [0]]
 rate = 0.0006
@@ -110,7 +113,9 @@ ax[0][1].set_ylabel('Loss')
 ax[0][1].set_title('Loss Function')
 
 ax[1][0].scatter(df['year'], Y)
-ax[1][0].plot(df['year'], theta[0] + theta[1] * X[:, 1:2] + theta[2] * X[:, 2:3] + theta[3] * X[:, 3:4] + theta[4] * X[:, 4:5], color='green')
+ax[1][0].plot(df['year'],
+              theta[0] + theta[1] * X[:, 1:2] + theta[2] * X[:, 2:3] + theta[3] * X[:, 3:4] + theta[4] * X[:, 4:5],
+              color='green')
 ax[1][0].set_xlabel('Year')
 ax[1][0].set_ylabel('GDP')
 ax[1][0].set_title('GDP And Year Scatter')
@@ -124,5 +129,20 @@ ax[1][1].plot(df['year'], params[0] + params[1] * X[:, 1:2] + params[2] * X[:, 2
 ax[1][1].set_xlabel('Year')
 ax[1][1].set_ylabel('GDP')
 ax[1][1].set_title('GDP And Year Scatter')
+
+# 调用 sklearn 库进行线性拟合
+# from sklearn import linear_model
+#
+# regr = linear_model.LinearRegression()
+# regr.fit(X, Y)
+# params = regr.coef_[0]
+# params[0] = regr.intercept_
+# ax[1][1].scatter(df['year'], Y)
+# ax[1][1].plot(df['year'],
+#               params[0] + params[1] * X[:, 1:2] + params[2] * X[:, 2:3] + params[3] * X[:, 3:4] + params[4] * X[:, 4:5],
+#               color='green')
+# ax[1][1].set_xlabel('Year')
+# ax[1][1].set_ylabel('GDP')
+# ax[1][1].set_title('GDP And Year Scatter')
 
 plt.show()

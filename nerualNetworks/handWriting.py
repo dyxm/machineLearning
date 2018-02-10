@@ -21,9 +21,10 @@ y = digits.target
 X -= X.min()
 X /= X.max()
 # 显示图片
-# pl.gray()
-# pl.matshow(digits.images[1])
-# pl.show()
+pl.gray()
+print (len(digits.images))
+pl.matshow(digits.images[1])
+pl.show()
 
 nn = NeuralNetwork([64, 100, 10], 'logistic')
 X_train, X_test, y_train, y_test = train_test_split(X, y)
